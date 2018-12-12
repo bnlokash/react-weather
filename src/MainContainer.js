@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import Current from './Current.js';
+import GMap from './GMap.js';
 
 class MainContainer extends Component {
-  constructor(props){
+  constructor(){
     super();
     this.state = {
       weatherData: null,
@@ -28,12 +29,15 @@ class MainContainer extends Component {
   render() {
     return(
       <div>
-        { this.state.weatherData ? 
-          <Current 
-            data={this.state.currently}
-            locationName={this.state.locationName}
-          /> 
+        { this.state.weatherData ?
+          <div>
+            <Current 
+              data={this.state.currently}
+              locationName={this.state.locationName}
+            />
+          </div>
         : null }
+        <GMap />
       </div>
     );
   }
