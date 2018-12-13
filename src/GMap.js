@@ -6,7 +6,8 @@ class GMap extends Component {
     super();
     this.state = {
       google: null,
-      map: null
+      map: null,
+      marker: null
     }
     this.loadScript = this.loadScript.bind(this);
     this.initMap = this.initMap.bind(this);
@@ -33,15 +34,38 @@ class GMap extends Component {
   initMap() {
     this.loadScript()
     .then(()=>{
-      this.map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 8
+      let map = new window.google.maps.Map(document.getElementById('map'), {
+        center: {lat: this.props.lat, lng: this.props.long},
+        zoom: 8,
+        mapTypeId: 'terrain',
+        disableDefaultUI: true,
+        zoomControl: true
+      });
+      map.addListener('click', (event)=>{
+        this.placeMarker({lat: event.latLng.lat(), lng: event.latLng.lng()});
       });
       this.setState({
-        google: window.google
+        google: window.google,
+        map: map
+      }, ()=>{
+        this.placeMarker({lat: this.props.lat, lng: this.props.long});
       });
     })
    
+  }
+
+  placeMarker(latLng){
+    if (this.state.marker){
+      this.state.marker.setMap(null);
+    }
+    let marker = new window.google.maps.Marker({
+      position: latLng
+    });
+    marker.setMap(this.state.map);
+    this.setState({
+      marker: marker
+    });
+    this.props.setLocation(latLng);
   }
 
   render() {

@@ -11,9 +11,10 @@ class MainContainer extends Component {
       weatherData: null,
       currently: null,
       locationName: null,
-      longitude: -1,
-      latitude: -1
+      longitude: null,
+      latitude: null
     }
+    this.childSetLocation = this.childSetLocation.bind(this);
   }
 
   componentDidMount() {
@@ -30,21 +31,28 @@ class MainContainer extends Component {
     return(
       <div>
         { this.state.weatherData ?
-          <div>
             <Current 
               data={this.state.currently}
               locationName={this.state.locationName}
             />
-          </div>
         : null }
-        <GMap />
+
+        { this.state.latitude && this.state.longitude ?
+          <GMap 
+            lat={this.state.latitude} 
+            long={this.state.longitude}
+            setLocation = {this.childSetLocation}
+          />
+        : null }
+
+        <a href="https://darksky.net/poweredby/">Powered by Dark Sky</a>
       </div>
     );
   }
 
   extractResponseData(responseData){
     let locationName = "";
-    if (responseData.gCloud.status == "OK") {
+    if (responseData.gCloud.status === "OK") {
       locationName = responseData.gCloud.results[0].formatted_address;
     } else {
       locationName = "the middle of nowhere";
@@ -56,33 +64,48 @@ class MainContainer extends Component {
       weatherData: responseData,
       currently: newCurrently,
       locationName: locationName
-    })
-
+    });
   }
 
   getLocation(){
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.setState({
-          latitude: position.coords.latitude, 
-          longitude: position.coords.longitude
-        });
-      });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            latitude: position.coords.latitude, 
+            longitude: position.coords.longitude
+          });
+        },
+        (error) => {
+          this.setState({
+            latitude: -1,
+            longitude: -1
+          });
+        }
+      );
     } else {
-      console.log("geolocation unavailable");
+      this.setState({
+        latitude: -1,
+        longitude: -1
+      });
     }
   }
 
   getWeather(){
     axios.get('https://weatherget.herokuapp.com/weather/' + this.state.latitude + "," + this.state.longitude)
       .then((response)=>{
-        console.log(response);
         this.extractResponseData(response.data);
       })
       .catch((error)=>{
         console.log(error);
       })
-   
+  }
+
+  childSetLocation(latLng){
+    this.setState({
+      latitude: latLng.lat,
+      longitude: latLng.lng
+    });
   }
 }
 
