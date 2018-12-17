@@ -70,7 +70,7 @@ class GMap extends Component {
 
   render() {
     return(
-      <div className="mapContainer">
+      <div className="mapContainer fl w-100 w-50-ns pa2">
         <div className="map" ref="map" id="map"></div>
       </div>
 

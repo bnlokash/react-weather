@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+
+import './tachyons.min.css';
 import './App.css';
 
 import MainContainer from './MainContainer.js';
