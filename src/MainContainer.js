@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Current from './Current.js';
+
+import Currently from './Currently.js';
+import Hourly from './Hourly.js';
+import Daily from './Daily.js';
 import GMap from './GMap.js';
 import Nav from './Nav.js';
 
@@ -11,13 +14,17 @@ class MainContainer extends Component {
     this.state = {
       weatherData: null,
       currently: null,
+      hourly: null,
       locationName: null,
       longitude: null,
       latitude: null,
       units: null,
+      offset: null,
       selected: 1
     }
     this.childSetLocation = this.childSetLocation.bind(this);
+    this.childSetSelected = this.childSetSelected.bind(this);
+
   }
 
   componentDidMount() {
@@ -31,17 +38,22 @@ class MainContainer extends Component {
   }
 
   render() {
+    let selectedPanel = null;
+    // eslint-disable-next-line
+    if (this.state.selected == 1) {selectedPanel = <Currently data={this.state.currently} units={this.state.units} offset={this.state.offset}/>;}
+    // eslint-disable-next-line
+    else if (this.state.selected == 2) {selectedPanel = <Hourly data={this.state.hourly} units={this.state.units} offset={this.state.offset}/>;}
+    // eslint-disable-next-line
+    else if (this.state.selected == 3) {selectedPanel = <Daily />;}
+
     return(
       <div className="mw9 center ph3-ns">
         <h1 className="tc">Weather in <span className="">{this.state.locationName}</span></h1>
         <div className="cf ph2-ns">
           <div className="fl w-100 w-50-ns pa2">
-            <Nav />
+            <Nav selectFunc={this.childSetSelected}/>
             { this.state.weatherData ?
-              <Current 
-                data={this.state.currently}
-                units={this.state.units}
-              />
+              selectedPanel
             : null }
           </div>
         { this.state.latitude && this.state.longitude ?
@@ -100,11 +112,17 @@ class MainContainer extends Component {
     newCurrently.apparentHigh = responseData.daily.data[0].apparentTemperatureHigh;
     newCurrently.apparentLow = responseData.daily.data[0].apparentTemperatureLow;
 
+    let newHourly = [];
+    newHourly.push(responseData.hourly.data[0]); newHourly.push(responseData.hourly.data[2]); newHourly.push(responseData.hourly.data[4]); newHourly.push(responseData.hourly.data[6]); newHourly.push(responseData.hourly.data[8]);
+    
+
     this.setState({
       weatherData: responseData,
       currently: newCurrently,
+      hourly: newHourly,
       locationName: locationName,
-      units: units
+      units: units,
+      offset: parseInt(responseData.offset)
     });
   }
 
@@ -146,6 +164,12 @@ class MainContainer extends Component {
     this.setState({
       latitude: latLng.lat,
       longitude: latLng.lng
+    });
+  }
+
+  childSetSelected(code) {
+    this.setState({
+      selected: code
     });
   }
 }

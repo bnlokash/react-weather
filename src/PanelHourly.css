@@ -1,0 +1,5 @@
+@media(min-width: 38em){
+  .secondChildMargin dl:nth-child(2) {
+    margin-block-start: 0;
+  }
+}

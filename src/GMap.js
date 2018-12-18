@@ -38,8 +38,7 @@ class GMap extends Component {
         center: {lat: this.props.lat, lng: this.props.long},
         zoom: 8,
         mapTypeId: 'terrain',
-        disableDefaultUI: true,
-        zoomControl: true
+        disableDefaultUI: true
       });
       map.addListener('click', (event)=>{
         this.placeMarker({lat: event.latLng.lat(), lng: event.latLng.lng()});
