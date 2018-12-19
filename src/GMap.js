@@ -58,7 +58,8 @@ class GMap extends Component {
       this.state.marker.setMap(null);
     }
     let marker = new window.google.maps.Marker({
-      position: latLng
+      position: latLng,
+      icon: 'climacons/marker.svg'
     });
     marker.setMap(this.state.map);
     this.setState({
@@ -71,6 +72,10 @@ class GMap extends Component {
     return(
       <div className="mapContainer fl w-100 w-50-ns pa2">
         <div className="map" ref="map" id="map"></div>
+        <div className="w-100 tr mt1">
+        <a href="https://darksky.net/poweredby/" className="link underline-hover dark-blue pr2">Powered by DarkSky</a>
+        <a href="http://adamwhitcroft.com/climacons/" className="link underline-hover dark-blue pl2">Climacons by Adam Whitcroft</a>
+      </div>
       </div>
 
     );

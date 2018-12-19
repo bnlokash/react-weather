@@ -15,7 +15,9 @@ class MainContainer extends Component {
       weatherData: null,
       currently: null,
       hourly: null,
+      daily: null,
       locationName: null,
+      locationNameSub: null,
       longitude: null,
       latitude: null,
       units: null,
@@ -44,11 +46,12 @@ class MainContainer extends Component {
     // eslint-disable-next-line
     else if (this.state.selected == 2) {selectedPanel = <Hourly data={this.state.hourly} units={this.state.units} offset={this.state.offset}/>;}
     // eslint-disable-next-line
-    else if (this.state.selected == 3) {selectedPanel = <Daily />;}
+    else if (this.state.selected == 3) {selectedPanel = <Daily days={this.state.daily} units={this.state.units} offset={this.state.offset}/>;}
 
     return(
       <div className="mw9 center ph3-ns">
-        <h1 className="tc">Weather in <span className="">{this.state.locationName}</span></h1>
+        <h1 className="tc mb1">Weather <span className="">{this.state.locationName}</span></h1>
+        <h4 className="tc mb0 mt0 black-50">{this.state.locationNameSub}</h4>
         <div className="cf ph2-ns">
           <div className="fl w-100 w-50-ns pa2">
             <Nav selectFunc={this.childSetSelected}/>
@@ -64,21 +67,47 @@ class MainContainer extends Component {
           />
         : null }
       </div>
-      <div className="cf w-auto">
-        <a href="https://darksky.net/poweredby/" className=" fl w-100 link underline-hover dark-blue tc">Powered by DarkSky</a>
-      </div>
+      
     </div>
     );
   }
 
   extractResponseData(responseData){
     console.log(responseData);
-
     let locationName = "";
-    if (responseData.gCloud.status === "OK") {
-      locationName = responseData.gCloud.results[0].formatted_address;
+    let locationNameSub = "";
+    if (responseData.gCloud) {
+      let address_components = responseData.gCloud.results[0].address_components;
+      locationName = "in " + address_components[0].long_name;
+
+      let prevAddressComponent = address_components[0].long_name;
+      let addedToSubCounter = 0;
+      // start at the second component
+      if (address_components.length > 1) {
+        for (let i = 1; i < address_components.length; i++) {
+          // test if the address component includes the previous component
+          if (!address_components[i].long_name.includes(prevAddressComponent)){
+            // test if the last address component contains any numbers
+            if (!(i === address_components.length-1 && /[0-9]/.test(address_components[i].long_name))){
+              // if this is the first string to be added to locationNameSub, don't include a leading comma and space
+              locationNameSub += ((addedToSubCounter === 0 ? '' : ', ') + (address_components[i].long_name));
+              addedToSubCounter++;
+            }
+            
+          }
+          prevAddressComponent = address_components[i].long_name;
+        }
+      }
+
+    } else if (responseData.geonames){
+      let name = responseData.geonames;
+      if (name.includes('Lake')) {
+        locationName = "on " + name;
+      } else {
+        locationName = "on the " + name;
+      }
     } else {
-      locationName = "the middle of nowhere";
+      locationName = "in the middle of nowhere";
     }
 
     let units = {}
@@ -115,13 +144,19 @@ class MainContainer extends Component {
     let newHourly = [];
     newHourly.push(responseData.hourly.data[0]); newHourly.push(responseData.hourly.data[2]); newHourly.push(responseData.hourly.data[4]); newHourly.push(responseData.hourly.data[6]); newHourly.push(responseData.hourly.data[8]);
     
+    let newDaily = {};
+    newDaily.data = responseData.daily.data.slice(0, 5);
+    newDaily.summary = responseData.daily.summary;
+    newDaily.icon = responseData.daily.icon;
 
     this.setState({
       weatherData: responseData,
       currently: newCurrently,
       hourly: newHourly,
       locationName: locationName,
+      locationNameSub: locationNameSub,
       units: units,
+      daily: newDaily,
       offset: parseInt(responseData.offset)
     });
   }

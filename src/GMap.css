@@ -1,7 +1,13 @@
 .mapContainer {
-  height: 400px;
+  height: 460px;
 }
 
 .map {
   height: 100%
+}
+
+@media(max-width: 43em) {
+  .mapContainer {
+    height: 300px;
+  }
 }
