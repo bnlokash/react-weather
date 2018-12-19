@@ -73,7 +73,6 @@ class MainContainer extends Component {
   }
 
   extractResponseData(responseData){
-    console.log(responseData);
     let locationName = "";
     let locationNameSub = "";
     if (responseData.gCloud) {
