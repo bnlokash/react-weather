@@ -1,0 +1,24 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.grid-center {
+  grid-column-start: 3;
+  grid-column-end: 11;
+}
+
+.grid-end {
+  grid-column-start: 11;
+  grid-column-end: 13;
+}
+
+.input-max-height {
+  max-height: 1.25em;
+  margin-top: 1.55em;
+}
+
+.searchResults {
+  position: absolute;
+  z-index: 10;
+}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import './MainContainer.css';
 
 import Currently from './Currently.js';
 import Hourly from './Hourly.js';
@@ -22,10 +23,13 @@ class MainContainer extends Component {
       latitude: null,
       units: null,
       offset: null,
-      selected: 1
+      selected: 1,
+      searchResults: null,
+      showSearchResults: false
     }
     this.childSetLocation = this.childSetLocation.bind(this);
     this.childSetSelected = this.childSetSelected.bind(this);
+    this.searchKeyUp = this.searchKeyUp.bind(this);
 
   }
 
@@ -48,10 +52,32 @@ class MainContainer extends Component {
     // eslint-disable-next-line
     else if (this.state.selected == 3) {selectedPanel = <Daily days={this.state.daily} units={this.state.units} offset={this.state.offset}/>;}
 
+    let searchResultsPanel = null;
+    if (this.state.searchResults) { 
+      console.log(this.state.searchResults);
+      searchResultsPanel = 
+      <ul className="searchResults">
+        {this.state.searchResults.map((element, index) => {
+          console.log(element);
+          return <li key={index}>{element.description}</li>
+        })}
+      </ul>
+    }
+
     return(
       <div className="mw9 center ph3-ns">
-        <h1 className="tc mb1">Weather <span className="">{this.state.locationName}</span></h1>
-        <h4 className="tc mb0 mt0 black-50">{this.state.locationNameSub}</h4>
+        <div className="grid-container">
+          <div className="grid-center">
+            <h1 className="tc mb1">Weather <span className="">{this.state.locationName}</span></h1>
+            <h4 className="tc mb0 mt0 black-50">{this.state.locationNameSub}</h4>
+          </div>
+          <div>
+            <input className="grid-end mr3 input-max-height" placeholder="search locations" onChange={this.searchKeyUp}/>
+            {this.state.showSearchResults ? searchResultsPanel : ""}
+          </div>
+        </div>
+        
+
         <div className="cf ph2-ns">
           <div className="fl w-100 w-50-ns pa2">
             <Nav selectFunc={this.childSetSelected}/>
@@ -204,6 +230,18 @@ class MainContainer extends Component {
   childSetSelected(code) {
     this.setState({
       selected: code
+    });
+  }
+
+  searchKeyUp(event) {
+    axios.get(`https://weatherget.herokuapp.com/placeAutocomplete/${event.target.value}`)
+    .then((response)=>{
+      console.log(response.data.predictions);
+      this.setState({
+        searchResults: response.data.predictions
+      }, this.setState({
+        showSearchResults: true
+      }));
     });
   }
 }
