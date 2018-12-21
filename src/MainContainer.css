@@ -1,24 +1,23 @@
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-}
-
-.grid-center {
-  grid-column-start: 3;
-  grid-column-end: 11;
-}
-
-.grid-end {
-  grid-column-start: 11;
-  grid-column-end: 13;
-}
-
-.input-max-height {
-  max-height: 1.25em;
-  margin-top: 1.55em;
-}
-
 .searchResults {
   position: absolute;
+  top: 58px;
+  right: 0.99em;
   z-index: 10;
+  background-color: white;
+  min-width: 201px;
+  padding-left: 0;
+  cursor: pointer;
+}
+
+.searchContainer {
+  position: relative;
+}
+
+.min1 {
+  min-height: 1px;
+}
+
+.input {
+  width: 100%;
+  max-width: 200px;
 }

@@ -9,7 +9,7 @@ class InfoPoint extends Component {
 
   render(){
     return(
-      <div className="flex flex-row items-center"> 
+      <div className="flex flex-row items-start"> 
         <Icon icon={this.props.icon} />
         <dl className="dib w-auto lh-title">
           <dd className="f6 fw4 ml0"><span className="ttc">{this.props.title}</span></dd>

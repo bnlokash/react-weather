@@ -68,6 +68,22 @@ class GMap extends Component {
     this.props.setLocation(latLng);
   }
 
+  placeMarkerAndPan(latLng) {
+    if (this.state.marker){
+      this.state.marker.setMap(null);
+    }
+    let marker = new window.google.maps.Marker({
+      position: latLng,
+      icon: 'climacons/marker.svg'
+    });
+    marker.setMap(this.state.map);
+    this.state.map.panTo(latLng);
+    this.setState({
+      marker: marker
+    });
+
+  }
+
   render() {
     return(
       <div className="mapContainer fl w-100 w-50-ns pa2">

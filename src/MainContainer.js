@@ -30,7 +30,9 @@ class MainContainer extends Component {
     this.childSetLocation = this.childSetLocation.bind(this);
     this.childSetSelected = this.childSetSelected.bind(this);
     this.searchKeyUp = this.searchKeyUp.bind(this);
+    this.searchResultClick = this.searchResultClick.bind(this);
 
+    this.mapRef = React.createRef();
   }
 
   componentDidMount() {
@@ -54,29 +56,28 @@ class MainContainer extends Component {
 
     let searchResultsPanel = null;
     if (this.state.searchResults) { 
-      console.log(this.state.searchResults);
       searchResultsPanel = 
-      <ul className="searchResults">
-        {this.state.searchResults.map((element, index) => {
-          console.log(element);
-          return <li key={index}>{element.description}</li>
-        })}
-      </ul>
+        <ul className="searchResults list fr mv0 ba">
+          {this.state.searchResults.map((element, index) => {
+            return <li className="tr pv1 pl3 pr1 bb b--black-20" key={index} id={index} onClick={this.searchResultClick}>{element.description}</li>
+          })}
+        </ul>
     }
 
     return(
       <div className="mw9 center ph3-ns">
-        <div className="grid-container">
-          <div className="grid-center">
-            <h1 className="tc mb1">Weather <span className="">{this.state.locationName}</span></h1>
-            <h4 className="tc mb0 mt0 black-50">{this.state.locationNameSub}</h4>
-          </div>
-          <div>
-            <input className="grid-end mr3 input-max-height" placeholder="search locations" onChange={this.searchKeyUp}/>
-            {this.state.showSearchResults ? searchResultsPanel : ""}
-          </div>
+        <div className="min1 fl w-20"></div>
+        <div className="fl w-60">
+          <h1 className="tc mb1">Weather <span className="">{this.state.locationName}</span></h1>
+          <h4 className="tc mb0 mt0 black-50">{this.state.locationNameSub}</h4>
         </div>
-        
+        <div className="fl w-20 searchContainer">
+          <input type="text" id="input" className="input fr mr3 mt4" placeholder="search locations" onChange={this.searchKeyUp}/>
+          <div className="searchContainer">
+            {this.state.showSearchResults ? searchResultsPanel : ''}
+          </div>
+          
+        </div>
 
         <div className="cf ph2-ns">
           <div className="fl w-100 w-50-ns pa2">
@@ -90,6 +91,7 @@ class MainContainer extends Component {
             lat={this.state.latitude} 
             long={this.state.longitude}
             setLocation = {this.childSetLocation}
+            ref={this.mapRef}
           />
         : null }
       </div>
@@ -234,15 +236,36 @@ class MainContainer extends Component {
   }
 
   searchKeyUp(event) {
-    axios.get(`https://weatherget.herokuapp.com/placeAutocomplete/${event.target.value}`)
-    .then((response)=>{
-      console.log(response.data.predictions);
+    if (event.target.value) {
+      axios.get(`https://weatherget.herokuapp.com/placeAutocomplete/${event.target.value}`)
+      .then((response)=>{
+        this.setState({
+          searchResults: response.data.predictions
+        }, this.setState({
+          showSearchResults: true
+        }));
+      });
+    } else {
       this.setState({
-        searchResults: response.data.predictions
-      }, this.setState({
-        showSearchResults: true
-      }));
-    });
+        showSearchResults: false
+      });
+    }
+  }
+
+  searchResultClick(event) {
+    document.getElementById('input').value = "";
+    this.setState({
+      showSearchResults: false
+    })
+    axios.get(`https://weatherget.herokuapp.com/geocode/${this.state.searchResults[event.target.id].place_id}`)
+    .then((response)=>{
+      let latLng = response.data.results[0].geometry.location;
+      this.setState({
+        latitude: latLng.lat,
+        longitude: latLng.lng
+      });
+      this.mapRef.current.placeMarkerAndPan(latLng);
+    })
   }
 }
 

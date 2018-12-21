@@ -11,9 +11,9 @@ class Daily extends Component {
   render(){
     return(
       <div>
-        <div className="flex flex-row items-center justify-between bb b--black-20 pr2 pr4-ns"> 
+        <div className="flex flex-row items-start justify-between bb b--black-20 pr2 pr4-ns"> 
           <Icon icon={this.props.days.icon} />
-          <dl className="dib lh-title fg1 mv2">
+          <dl className="dib lh-title fg1 mv0 pv2">
             <dd className="f6 fw4 ml0"><span className="ttc">Forecast</span></dd>
             <dd className="f3 fw6 ml0">{this.props.days.summary}</dd>
           </dl>
