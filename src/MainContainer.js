@@ -31,7 +31,8 @@ class MainContainer extends Component {
     this.childSetSelected = this.childSetSelected.bind(this);
     this.searchKeyUp = this.searchKeyUp.bind(this);
     this.searchResultClick = this.searchResultClick.bind(this);
-
+    this.showSearchResults = this.showSearchResults.bind(this);
+    this.hideSearchResults = this.hideSearchResults.bind(this);
     this.mapRef = React.createRef();
   }
 
@@ -65,14 +66,14 @@ class MainContainer extends Component {
     }
 
     return(
-      <div className="mw9 center ph3-ns">
+      <div className="mw9 center ph3-ns" onClick={this.hideSearchResults}>
         <div className="min1 fl w-20"></div>
         <div className="fl w-60">
           <h1 className="tc mb1">Weather <span className="">{this.state.locationName}</span></h1>
           <h4 className="tc mb0 mt0 black-50">{this.state.locationNameSub}</h4>
         </div>
         <div className="fl w-20 searchContainer">
-          <input type="text" id="input" className="input fr mr3 mt4" placeholder="search locations" onChange={this.searchKeyUp}/>
+          <input type="text" id="input" className="input fr mr3 mt4" placeholder="search locations" onChange={this.searchKeyUp} onClick={this.showSearchResults}/>
           <div className="searchContainer">
             {this.state.showSearchResults ? searchResultsPanel : ''}
           </div>
@@ -266,6 +267,21 @@ class MainContainer extends Component {
       });
       this.mapRef.current.placeMarkerAndPan(latLng);
     })
+  }
+
+  hideSearchResults(){
+    this.setState({
+      showSearchResults: false
+    })
+  }
+
+  showSearchResults(event){
+    event.stopPropagation();
+    if (event.target.value){
+      this.setState({
+        showSearchResults: true
+      });
+    }
   }
 }
 

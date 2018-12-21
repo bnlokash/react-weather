@@ -4,6 +4,7 @@
 
 This humble weather app has a few cool features
 * Click on the map to see the weather for that location
+* Search locations and select one to jump there
 * Current, hourly and daily forecasts from the DarkSky API
 * Automatic units and timezone conversion
 * Location names from google reverse-geocoder
@@ -16,3 +17,4 @@ This humble weather app has a few cool features
   * main container done with floats
   * individual panels in the hourly and daily displays use flexbox
   * responsive - hourly panels flip to horizontal on breakpoint
+  * search results are position absolute + z-index
