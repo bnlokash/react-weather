@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './GMap.css';
 
-class GMap extends Component {
+class GMapView extends Component {
   constructor(props){
     super();
     this.state = {
@@ -101,5 +100,5 @@ class GMap extends Component {
   }
 }
 
-export default GMap;
+export default GMapView;
 

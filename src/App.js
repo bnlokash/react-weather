@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import './tachyons.min.css';
-import './App.css';
+import './CSS/tachyons.min.css';
+import './CSS/App.css';
 
-import MainContainer from './MainContainer.js';
+import MainContainer from './Views/MainContainer/MainContainerView.js';
 
 
 class App extends Component {

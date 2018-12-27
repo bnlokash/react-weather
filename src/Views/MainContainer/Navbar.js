@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import './Nav.css';
 
-
-class Nav extends Component {
+class Navbar extends Component {
   constructor(props){
     super();
     this.state = {
@@ -39,4 +37,4 @@ class Nav extends Component {
   }
 }
 
-export default Nav;
+export default Navbar;
