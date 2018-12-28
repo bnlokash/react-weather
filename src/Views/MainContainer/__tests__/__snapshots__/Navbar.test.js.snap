@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button text changes class when clicked 1`] = `
+<div
+  className="w-100 dt dt--fixed"
+>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={1}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue b"
+      id={1}
+      onClick={[Function]}
+    >
+      Currently
+    </span>
+  </div>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={2}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue"
+      id={2}
+      onClick={[Function]}
+    >
+      Hourly
+    </span>
+  </div>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={3}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue"
+      id={3}
+      onClick={[Function]}
+    >
+      Daily
+    </span>
+  </div>
+          
+</div>
+`;
+
+exports[`Button text changes class when clicked 2`] = `
+<div
+  className="w-100 dt dt--fixed"
+>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={1}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue"
+      id={1}
+      onClick={[Function]}
+    >
+      Currently
+    </span>
+  </div>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={2}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue b"
+      id={2}
+      onClick={[Function]}
+    >
+      Hourly
+    </span>
+  </div>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={3}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue"
+      id={3}
+      onClick={[Function]}
+    >
+      Daily
+    </span>
+  </div>
+          
+</div>
+`;
+
+exports[`Button text changes class when clicked 3`] = `
+<div
+  className="w-100 dt dt--fixed"
+>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={1}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue"
+      id={1}
+      onClick={[Function]}
+    >
+      Currently
+    </span>
+  </div>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={2}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue"
+      id={2}
+      onClick={[Function]}
+    >
+      Hourly
+    </span>
+  </div>
+  <div
+    className="cursor-pointer dtc tc pv2 bg-black-10"
+    id={3}
+    onClick={[Function]}
+  >
+    <span
+      className="cursor-pointer link underline-hover dark-blue b"
+      id={3}
+      onClick={[Function]}
+    >
+      Daily
+    </span>
+  </div>
+          
+</div>
+`;

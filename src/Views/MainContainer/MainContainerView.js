@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import responseExtractorFactory from './responseExtractorFactory.js';
+import SELECTED from './navbarConstants.js';
 
 import CurrentlyView from '../Currently/CurrentlyView.js';
 import HourlyView from '../Hourly/HourlyView.js';
@@ -47,36 +48,27 @@ class MainContainer extends Component {
   }
 
   render() {
-    let selectedPanel = null;
-    // eslint-disable-next-line
-    if (this.state.selected == 1) {
-      selectedPanel = <CurrentlyView data={this.state.currently} units={this.state.units} offset={this.state.offset}/>;
-    }
-    // eslint-disable-next-line
-    else if (this.state.selected == 2) {
-      selectedPanel = <HourlyView data={this.state.hourly} units={this.state.units} offset={this.state.offset}/>;
-    }
-    // eslint-disable-next-line
-    else if (this.state.selected == 3) {
-      selectedPanel = <DailyView data={this.state.daily} units={this.state.units} offset={this.state.offset}/>;
-    }
+    const {weatherData, latitude, longitude, locationHeading, locationSubtitle, selected} = this.state;
+    const {hideSearchResults, childSetLocation, childPlaceMarkerAndPan, childSetSelected, mapRef, searchBarRef} = this;
+
+    let selectedPanel = this.choosePanel(selected);
 
     return(
-      <div className="mw9 center ph3-ns" onClick={this.hideSearchResults}>
-        <LocationHeading heading={this.state.locationHeading} subtitle={this.state.locationSubtitle}>
-          <SearchBar setLocation={this.childSetLocation} setMap={this.childPlaceMarkerAndPan} ref={this.searchBarRef}/>
+      <div className="mw9 center ph3-ns" onClick={hideSearchResults}>
+        <LocationHeading heading={locationHeading} subtitle={locationSubtitle}>
+          <SearchBar setLocation={childSetLocation} setMap={childPlaceMarkerAndPan} ref={searchBarRef}/>
         </LocationHeading>
         <div className="cf ph2-ns">
           <div className="fl w-100 w-50-ns pa2">
-            <Navbar selectFunc={this.childSetSelected}/>
-            { this.state.weatherData && selectedPanel }
+            <Navbar selectFunc={childSetSelected}/>
+            { weatherData && selectedPanel }
           </div>
-          { this.state.latitude && this.state.longitude &&
+          { latitude && longitude &&
             <GMapView 
-              lat={this.state.latitude} 
-              long={this.state.longitude}
-              setLocation = {this.childSetLocation}
-              ref={this.mapRef}
+              lat={latitude} 
+              long={longitude}
+              setLocation = {childSetLocation}
+              ref={mapRef}
             />
           }
         </div>
@@ -87,12 +79,12 @@ class MainContainer extends Component {
   extractResponseData(responseData){
     const responseExtractor = responseExtractorFactory(responseData);
 
-    const locationHeading = responseExtractor.extractLocationHeading();
-    const locationSubtitle = responseExtractor.extractLocationSubtitle();
-    const currently = responseExtractor.extractCurrentlyObj();
-    const hourly = responseExtractor.extractHourlyArr();
-    const daily = responseExtractor.extractDailyObj();
-    const units = responseExtractor.extractUnitsObj();
+    const locationHeading = responseExtractor.LocationHeading();
+    const locationSubtitle = responseExtractor.LocationSubtitle();
+    const currently = responseExtractor.CurrentlyObj();
+    const hourly = responseExtractor.HourlyArr();
+    const daily = responseExtractor.DailyObj();
+    const units = responseExtractor.UnitsObj();
 
     this.setState({
       weatherData: responseData,
@@ -130,6 +122,25 @@ class MainContainer extends Component {
     }
   }
 
+  choosePanel(selected){
+    const {currently, hourly, daily, units, offset} = this.state;
+    let selectedPanel = null;
+    switch (selected) {
+      case SELECTED.CURRENTLY :
+        selectedPanel = <CurrentlyView data={currently} units={units} offset={offset}/>;
+        break;
+      case SELECTED.HOURLY :
+        selectedPanel = <HourlyView data={hourly} units={units} offset={offset}/>; 
+        break;
+      case SELECTED.DAILY :
+        selectedPanel = <DailyView data={daily} units={units} offset={offset}/>; 
+        break;
+      default :
+        selectedPanel = <CurrentlyView data={currently} units={units} offset={offset}/>;
+    }
+    return selectedPanel;
+  }
+
   getWeather(){
     axios.get('https://weatherget.herokuapp.com/weather/' + this.state.latitude + "," + this.state.longitude)
       .then((response)=>{
@@ -141,7 +152,6 @@ class MainContainer extends Component {
   }
 
   childSetLocation(latLng){
-    console.log('child set location');
     this.setState({
       latitude: latLng.lat,
       longitude: latLng.lng
@@ -149,7 +159,6 @@ class MainContainer extends Component {
   }
 
   childSetSelected(code) {
-    console.log('child set selected');
     this.setState({
       selected: code
     });

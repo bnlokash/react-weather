@@ -2,7 +2,7 @@ export default function responseExtractorFactory(responseData){
   let data = responseData;
 
   return {
-    extractLocationHeading: function() {
+    LocationHeading: function() {
       let locationHeading = "";
       if (data.gCloud){
         let address_components = responseData.gCloud.results[0].address_components;
@@ -20,7 +20,7 @@ export default function responseExtractorFactory(responseData){
       return locationHeading;
     },
 
-    extractLocationSubtitle: function() {
+    LocationSubtitle: function() {
       let locationSubtitle = '';
       if (data.gCloud) {
         let address_components = responseData.gCloud.results[0].address_components;
@@ -45,7 +45,7 @@ export default function responseExtractorFactory(responseData){
       return locationSubtitle;
     },
 
-    extractUnitsObj: function() {
+    UnitsObj: function() {
       let units = {};
       switch (data.flags.units) {
         case 'ca' :
@@ -72,7 +72,7 @@ export default function responseExtractorFactory(responseData){
       return units;
     },
 
-    extractCurrentlyObj: function() {
+    CurrentlyObj: function() {
       const {currently, hourly, daily} = data;
       let newCurrently = currently;
       newCurrently.dailyDescription = hourly.summary;
@@ -83,7 +83,7 @@ export default function responseExtractorFactory(responseData){
       return newCurrently;
     },
 
-    extractHourlyArr: function() {
+    HourlyArr: function() {
       let newHourly = [];
       newHourly.push(responseData.hourly.data[0]); 
       newHourly.push(responseData.hourly.data[2]); 
@@ -93,7 +93,7 @@ export default function responseExtractorFactory(responseData){
       return newHourly;
     },
 
-    extractDailyObj: function() {
+    DailyObj: function() {
       let newDaily = {};
       newDaily.days = responseData.daily.data.slice(0, 5);
       newDaily.summary = responseData.daily.summary;
